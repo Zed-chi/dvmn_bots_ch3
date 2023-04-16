@@ -1,32 +1,61 @@
-import os
 import logging
-from telegram.ext import Updater, CommandHandler, MessageHandler, Filters
-from dotenv import load_dotenv
+
+from environs import Env
+from telegram import Update
+from telegram.ext import (
+    CallbackContext,
+    CommandHandler,
+    Filters,
+    MessageHandler,
+    Updater,
+)
 from dialog import detect_intent_texts
 
-load_dotenv()
+env = Env()
+env.read_env()
+
+
 logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    level=logging.INFO,
 )
 
 
-updater = Updater(token=os.getenv("token"))
-dispatcher = updater.dispatcher
+def start(update: Update, context: CallbackContext):
+    context.bot.send_message(
+        chat_id=update.effective_chat.id, text="I'm a bot, please talk to me!"
+    )
 
 
-def start(update, context):
-    context.bot.send_message(chat_id=update.effective_chat.id, text="I'm a bot, please talk to me!")
-
-def echo(update, context):
-    text = update.message.text
-    answer = detect_intent_texts(os.getenv("dialog_id"), "test", text, "ru")
-    print(answer)
-    context.bot.send_message(chat_id=update.effective_chat.id, text=answer)
-
-echo_handler = MessageHandler(Filters.text & (~Filters.command), echo)
-start_handler = CommandHandler('start', start)
+def reply_same_text(update: Update, context: CallbackContext):
+    pass
 
 
-dispatcher.add_handler(start_handler)
-dispatcher.add_handler(echo_handler)
-updater.start_polling()
+def echo(update: Update, context: CallbackContext):
+    context.bot.send_message(chat_id=update.effective_chat.id, text=update.message.text)
+
+
+def dialog_answer(update: Update, context: CallbackContext):
+    res = detect_intent_texts(
+        env.str("PROJECT_ID"), update.effective_chat.id, [update.message.text], "ru"
+    )
+    context.bot.send_message(chat_id=update.effective_chat.id, text=res)
+
+
+def main():
+    updater = Updater(token=env.str("TG_TOKEN"))
+    dispatcher = updater.dispatcher
+    # stuff
+    start_handler = CommandHandler("start", start)
+    # echo_handler = MessageHandler(Filters.text & (~Filters.command), echo)
+    dialog_handler = MessageHandler(Filters.text & (~Filters.command), dialog_answer)
+
+    dispatcher.add_handler(start_handler)
+    # dispatcher.add_handler(echo_handler)
+    dispatcher.add_handler(dialog_handler)
+
+    updater.start_polling()
+
+
+if __name__ == "__main__":
+    main()
