@@ -6,9 +6,7 @@ env = Env()
 env.read_env("../.env")
 
 
-def authenticate_with_api_key(
-    quota_project_id: str, api_key_string: str
-) -> None:
+def authenticate_with_api_key(quota_project_id: str, api_key_string: str) -> None:
     """
     Authenticates with an API key for Google Language service.
 
@@ -42,4 +40,4 @@ def authenticate_with_api_key(
     print("Successfully authenticated using the API key")
 
 
-authenticate_with_api_key(env.str("PROJECT_ID"), env.str("PROJECT_API_KEY"))
+authenticate_with_api_key(env.str("GOOGLE_CLOUD_PROJECT"), env.str("PROJECT_API_KEY"))

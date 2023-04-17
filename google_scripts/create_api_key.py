@@ -41,4 +41,4 @@ def create_api_key(project_id: str, suffix: str) -> Key:
     return response
 
 
-create_api_key(env.str("PROJECT_ID"), env.str("PROJECT_SUFFIX"))
+create_api_key(env.str("GOOGLE_CLOUD_PROJECT"), env.str("PROJECT_SUFFIX"))
