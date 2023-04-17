@@ -33,17 +33,18 @@ def echo(update: Update, context: CallbackContext):
 
 
 def dialog_answer(update: Update, context: CallbackContext):
-    res = detect_intent_texts(
+    answer = detect_intent_texts(
         env.str("PROJECT_ID"),
         update.effective_chat.id,
         update.message.text,
         "ru",
     )
-    context.bot.send_message(chat_id=update.effective_chat.id, text=res)
+    if answer:
+        context.bot.send_message(chat_id=update.effective_chat.id, text=res)
 
 
 def main():
-    updater = Updater(token=env.str("TG_TOKEN"))
+    updater = Updater(token=env.str("TG_BOT_TOKEN"))
     dispatcher = updater.dispatcher
     # stuff
     start_handler = CommandHandler("start", start)
