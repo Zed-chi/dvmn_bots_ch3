@@ -40,7 +40,7 @@ def dialog_answer(update: Update, context: CallbackContext):
         "ru",
     )
     if answer:
-        context.bot.send_message(chat_id=update.effective_chat.id, text=res)
+        context.bot.send_message(chat_id=update.effective_chat.id, text=answer)
 
 
 def main():
