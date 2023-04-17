@@ -2,8 +2,13 @@ import logging
 
 from environs import Env
 from telegram import Update
-from telegram.ext import (CallbackContext, CommandHandler, Filters,
-                          MessageHandler, Updater)
+from telegram.ext import (
+    CallbackContext,
+    CommandHandler,
+    Filters,
+    MessageHandler,
+    Updater,
+)
 
 from dialog import detect_intent_texts
 
@@ -13,7 +18,7 @@ env.read_env()
 
 logging.basicConfig(
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
-    level=logging.INFO,
+    level=getattr(logging, env.str("LOG_LEVEL", "WARNING")),
 )
 
 
