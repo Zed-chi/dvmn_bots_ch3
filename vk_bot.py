@@ -5,7 +5,7 @@ import vk_api
 from environs import Env
 from vk_api.bot_longpoll import VkBotEventType, VkBotLongPoll
 
-from dialog import detect_intent_texts
+from dialogflow import detect_intent_texts
 
 env = Env()
 env.read_env("./.env")

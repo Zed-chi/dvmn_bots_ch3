@@ -2,10 +2,15 @@ import logging
 
 from environs import Env
 from telegram import Update
-from telegram.ext import (CallbackContext, CommandHandler, Filters,
-                          MessageHandler, Updater)
+from telegram.ext import (
+    CallbackContext,
+    CommandHandler,
+    Filters,
+    MessageHandler,
+    Updater,
+)
 
-from dialog import detect_intent_texts
+from dialogflow import detect_intent_texts
 
 env = Env()
 env.read_env()
@@ -24,9 +29,7 @@ def start(update: Update, context: CallbackContext):
 
 
 def echo(update: Update, context: CallbackContext):
-    context.bot.send_message(
-        chat_id=update.effective_chat.id, text=update.message.text
-    )
+    context.bot.send_message(chat_id=update.effective_chat.id, text=update.message.text)
 
 
 def dialog_answer(update: Update, context: CallbackContext):
@@ -45,9 +48,7 @@ def main():
     # stuff
     start_handler = CommandHandler("start", start)
     # echo_handler = MessageHandler(Filters.text & (~Filters.command), echo)
-    dialog_handler = MessageHandler(
-        Filters.text & (~Filters.command), dialog_answer
-    )
+    dialog_handler = MessageHandler(Filters.text & (~Filters.command), dialog_answer)
 
     dispatcher.add_handler(start_handler)
     # dispatcher.add_handler(echo_handler)
