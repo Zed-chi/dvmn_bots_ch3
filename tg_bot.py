@@ -2,13 +2,8 @@ import logging
 
 from environs import Env
 from telegram import Update
-from telegram.ext import (
-    CallbackContext,
-    CommandHandler,
-    Filters,
-    MessageHandler,
-    Updater,
-)
+from telegram.ext import (CallbackContext, CommandHandler, Filters,
+                          MessageHandler, Updater)
 
 from dialog import detect_intent_texts
 
