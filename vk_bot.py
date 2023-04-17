@@ -1,3 +1,4 @@
+import logging
 import random
 
 import vk_api
@@ -9,9 +10,13 @@ from dialog import detect_intent_texts
 env = Env()
 env.read_env("./.env")
 
+logging.basicConfig(
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+    level=getattr(logging, env.str("LOG_LEVEL", "WARNING")),
+)
+
 
 def echo_answer(event, vk_api):
-    print(f"event.message = {event.message}")
     user_id = event.message["from_id"]
     message = event.message["text"]
 
@@ -23,6 +28,7 @@ def echo_answer(event, vk_api):
 
 
 def answer_from_dialogflow(event, vk_api):
+    logging.debug(f"dialogflow event {event}")
     user_id = event.message["from_id"]
     message = event.message["text"]
     answer = detect_intent_texts(env.str("PROJECT_ID"), user_id, message, "ru")
@@ -31,6 +37,7 @@ def answer_from_dialogflow(event, vk_api):
         message=answer,
         random_id=random.randint(1, 1000),
     )
+    logging.debug(f"dialogflow message sended\n")
 
 
 def main():
@@ -40,31 +47,20 @@ def main():
 
     for event in longpoll.listen():
         if event.type == VkBotEventType.MESSAGE_NEW:
-            print("Новое сообщение:")
+            logging.info("Пришло сообщение.")
             answer_from_dialogflow(event, api)
         elif event.type == VkBotEventType.MESSAGE_REPLY:
-            print("Новое сообщение:")
-            print("От меня для: ", end="")
-            print(event.obj.peer_id)
-            print("Текст:", event.obj.text)
-            print()
+            logging.info(
+                f"Новое сообщение от меня для {event.obj.peer_id}\nТекст:{event.obj.text}"
+            )
         elif event.type == VkBotEventType.MESSAGE_TYPING_STATE:
-            print("Печатает ", end="")
-            print(event.obj.from_id, end=" ")
-            print("для ", end="")
-            print(event.obj.to_id)
-            print()
+            logging.info(f"Печатает {event.obj.from_id} для {event.obj.to_id}")
         elif event.type == VkBotEventType.GROUP_JOIN:
-            print(event.obj.user_id, end=" ")
-            print("Вступил в группу!")
-            print()
+            logging.info(f"{event.obj.user_id} Вступил в группу!")
         elif event.type == VkBotEventType.GROUP_LEAVE:
-            print(event.obj.user_id, end=" ")
-            print("Покинул группу!")
-            print()
+            logging.info(f"{event.obj.user_id} Покинул группу!")
         else:
-            print(event.type)
-            print()
+            logging.info(event.type)
 
 
 if __name__ == "__main__":
