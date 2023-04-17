@@ -38,7 +38,7 @@ def answer_from_dialogflow(event, vk_api):
             message=answer,
             random_id=random.randint(1, 1000),
         )
-    logging.debug(f"dialogflow message sended\n")
+    logging.debug("dialogflow message sended\n")
 
 
 def main():
@@ -52,7 +52,9 @@ def main():
             answer_from_dialogflow(event, api)
         elif event.type == VkBotEventType.MESSAGE_REPLY:
             logging.info(
-                f"Новое сообщение от меня для {event.obj.peer_id}\nТекст:{event.obj.text}"
+                "Новое сообщение от меня для {}, Текст:{}".format(
+                    event.obj.peer_id, event.obj.text
+                )
             )
         elif event.type == VkBotEventType.MESSAGE_TYPING_STATE:
             logging.info(f"Печатает {event.obj.from_id} для {event.obj.to_id}")
