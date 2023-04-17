@@ -32,11 +32,12 @@ def answer_from_dialogflow(event, vk_api):
     user_id = event.message["from_id"]
     message = event.message["text"]
     answer = detect_intent_texts(env.str("PROJECT_ID"), user_id, message, "ru")
-    vk_api.messages.send(
-        user_id=user_id,
-        message=answer,
-        random_id=random.randint(1, 1000),
-    )
+    if answer:
+        vk_api.messages.send(
+            user_id=user_id,
+            message=answer,
+            random_id=random.randint(1, 1000),
+        )
     logging.debug(f"dialogflow message sended\n")
 
 
