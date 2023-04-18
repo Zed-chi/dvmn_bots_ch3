@@ -1,6 +1,6 @@
 from environs import Env
-from google.cloud import api_keys_v2, language_v1
-from google.cloud.api_keys_v2 import Key
+from google.cloud import language_v1
+
 
 env = Env()
 env.read_env("../.env")
