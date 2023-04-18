@@ -1,0 +1,4 @@
+[flake8]
+exclude = .git,__pycache__,*/tests.py,*/migrations/*,*/api, ./my_blog
+max-complexity = 7
+extend-ignore = E501
