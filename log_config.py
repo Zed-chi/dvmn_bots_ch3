@@ -5,7 +5,7 @@ from telegram import Bot
 
 env = Env()
 
-FORMAT = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+FORMATTER = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
 
 def get_logger(name):
@@ -25,10 +25,7 @@ class TelegramLogsHandler(logging.Handler):
         self.tg_bot.send_message(chat_id=self.chat_id, text=log_entry)
 
 
-def select_handler_by_env(
-    logger: logging.Logger,
-    bot=None
-):
+def select_handler_by_env(logger: logging.Logger, bot=None):
     """options - FILE/TG/CONSOLE"""
     log_env = env.str("LOGGER")
     if log_env == "FILE":
@@ -40,5 +37,5 @@ def select_handler_by_env(
         handler = TelegramLogsHandler(bot, env.str("TG_ADMIN_CHAT_ID"))
     else:
         handler = logging.StreamHandler()
-    handler.setFormatter(FORMAT)
+    handler.setFormatter(FORMATTER)
     logger.addHandler(handler)
