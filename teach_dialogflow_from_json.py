@@ -1,8 +1,7 @@
 import json
 
-from environs import Env
-
 from dialog import create_intent
+from environs import Env
 
 env = Env()
 env.read_env()
