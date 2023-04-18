@@ -1,7 +1,6 @@
 from environs import Env
 from google.cloud import language_v1
 
-
 env = Env()
 env.read_env("../.env")
 
