@@ -19,13 +19,18 @@
 ```
 TG_BOT_TOKEN=<Токен от ТГ бота>
 TG_BOT_NAME=<Имя ТГ бота>
-GOOGLE_CLOUD_PROJECT=<ID Проекта dialogflow>
-PROJECT_SUFFIX=<Имя Проекта dialogflow>
-PROJECT_API_KEY=<Ключ dialogflow полученный с помощью googlecli>
-GOOGLE_APPLICATION_CREDENTIALS=<путь до файла с ключами от Google, credentials.json>
+TG_ADMIN_CHAT_ID=
+
 VK_GROUP_TOKEN=<Токен от группы ВК>
 VK_GROUP_ID=<Номер группы ВК>
+
+PROJECT_SUFFIX=<Имя Проекта dialogflow>
+GOOGLE_APPLICATION_CREDENTIALS=<путь до файла с ключами от Google, credentials.json>
+GOOGLE_CLOUD_PROJECT=<ID Проекта dialogflow>
+PROJECT_API_KEY=<ключ полученный с помощью google cli>
 LOG_LEVEL=<Уровень логирования - DEBUG/INFO/WARNING>
+LOG_PATH=<Путь к лог файлу>
+LOGGER=<Вариант вывода лога FILE/TG> либо вывод в консоль при отсутствии
 ```
 
 ### Обучение DialogFlow/Наполнение Intent-ов:
