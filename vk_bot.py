@@ -11,7 +11,6 @@ env = Env()
 env.read_env("./.env")
 
 LOGGER = get_logger("VK")
-select_handler_by_env(LOGGER)
 
 
 def echo_answer(event, vk_api):
@@ -41,7 +40,6 @@ def answer_from_dialogflow(event, vk_api):
         )
     else:
         LOGGER.debug(f"dont understand message from user#{user_id}")
-    LOGGER.debug("dialogflow message sended\n")
 
 
 def listening_cycle(longpoll, api):
@@ -66,12 +64,13 @@ def listening_cycle(longpoll, api):
 
 
 def main():
+    select_handler_by_env(LOGGER)
     vk_session = vk_api.VkApi(token=env.str("VK_GROUP_TOKEN"))
     api = vk_session.get_api()
     longpoll = VkBotLongPoll(vk_session, env.str("VK_GROUP_ID"))
 
     while True:
-        LOGGER.info("listening starts...")
+        LOGGER.info("Bot listening for events.")
         try:
             listening_cycle(longpoll, api)
         except Exception as e:
