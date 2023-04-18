@@ -1,4 +1,5 @@
 import logging
+
 from environs import Env
 from telegram import Bot
 
@@ -26,6 +27,7 @@ class TelegramLogsHandler(logging.Handler):
 
 def select_handler_by_env(
     logger: logging.Logger,
+    bot=None
 ):
     """options - FILE/TG/CONSOLE"""
     log_env = env.str("LOGGER")
@@ -33,7 +35,8 @@ def select_handler_by_env(
         handler = logging.FileHandler(env.str("LOG_PATH"))
 
     elif log_env == "TG":
-        bot = Bot(token=env.str("TG_BOT_TOKEN"))
+        if bot is None:
+            bot = Bot(token=env.str("TG_BOT_TOKEN"))
         handler = TelegramLogsHandler(bot, env.str("TG_ADMIN_CHAT_ID"))
     else:
         handler = logging.StreamHandler()
