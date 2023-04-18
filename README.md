@@ -16,7 +16,9 @@ Dialogflow — это платформа для понимания естест�
 - Создать сообщество ВК, получить api ключ, включить longpooling
 - Как создать проект в [dialogflow](https://cloud.google.com/dialogflow/docs/quick/setup)
 - Создать агент в [dialogflow](https://cloud.google.com/dialogflow/docs/quick/build-agent)
-- Включить API DialogFlow на вашем Google-аккаунте
+- [Включить API DialogFlow](https://cloud.google.com/dialogflow/es/docs/quick/setup#api) на вашем Google-аккаунте
+- Получить ключи credentials.json c помощью [google cli](https://cloud.google.com/dialogflow/es/docs/quick/setup#sdk)
+- [Создать токен](https://cloud.google.com/docs/authentication/api-keys) DialogFlow
 
 ### Установка:
 
@@ -26,7 +28,7 @@ Dialogflow — это платформа для понимания естест�
 ```
 TG_BOT_TOKEN=<Токен от ТГ бота>
 TG_BOT_NAME=<Имя ТГ бота>
-TG_ADMIN_CHAT_ID=
+TG_ADMIN_CHAT_ID=<id tg разработчика для отсылки сообщений с ошибками >
 
 VK_GROUP_TOKEN=<Токен от группы ВК>
 VK_GROUP_ID=<Номер группы ВК>
@@ -34,7 +36,7 @@ VK_GROUP_ID=<Номер группы ВК>
 PROJECT_SUFFIX=<Имя Проекта dialogflow>
 GOOGLE_APPLICATION_CREDENTIALS=<путь до файла с ключами от Google, credentials.json>
 GOOGLE_CLOUD_PROJECT=<ID Проекта dialogflow>
-PROJECT_API_KEY=<ключ полученный с помощью google cli>
+PROJECT_API_KEY=<токен полученный с помощью google cli>
 LOG_LEVEL=<Уровень логирования - DEBUG/INFO/WARNING>
 LOG_PATH=<Путь к лог файлу>
 LOGGER=<Вариант вывода лога FILE/TG> либо вывод в консоль при отсутствии
@@ -49,6 +51,9 @@ LOGGER=<Вариант вывода лога FILE/TG> либо вывод в к�
 
 - Запуск тг бота - `python tg_bot.py`.
 - Запуск вк бота - `python vk_bot.py`.
+  Тестовые версии:
+- https://vk.com/club131455573
+- https://t.me/zedchi_dialog_bot
 
 ### Цель проекта
 
