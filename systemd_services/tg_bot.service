@@ -1,0 +1,11 @@
+[Unit]
+Description=TG Bot
+After=network.target
+
+[Service]
+WorkingDirectory=/opt/bots
+ExecStart=python3 tg_bot.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
