@@ -1,5 +1,7 @@
+import logging
+
 from environs import Env
-from telegram import Update
+from telegram import Bot, Update
 from telegram.ext import (
     CallbackContext,
     CommandHandler,
@@ -8,11 +10,12 @@ from telegram.ext import (
     Updater,
 )
 
-from dialogflow import detect_intent_texts
-from log_config import get_logger, select_handler_by_env
+from dialogflow import Answer, detect_intent_texts
+from log_config import get_handler_by_env, FORMATTER
 
 ENV = Env()
-LOGGER = get_logger("TG")
+LOGGER = logging.getLogger("TG")
+LOGGER.setFormatter(FORMATTER)
 
 
 def error_handler(update, context):
@@ -28,37 +31,35 @@ def start(update: Update, context: CallbackContext):
 def dialog_answer(update: Update, context: CallbackContext):
     user_id = update.effective_chat.id
     LOGGER.debug(f"user#{user_id} sended message")
-    answer = detect_intent_texts(
+    answer: Answer = detect_intent_texts(
         ENV.str("GOOGLE_CLOUD_PROJECT"),
         update.effective_chat.id,
         update.message.text,
         "ru",
     )
-    if answer:
-        LOGGER.info(f"user#{user_id} sended message")
-        context.bot.send_message(chat_id=update.effective_chat.id, text=answer)
-    else:
-        LOGGER.debug(f"dont understand message from user#{user_id}")
+    LOGGER.info(f"user#{user_id} sended message")
+    context.bot.send_message(chat_id=update.effective_chat.id, text=answer.text)
 
 
-def main(bot=None):
-    ENV.read_env()
-    if bot:
-        LOGGER.debug("external bot inject")
-        updater = Updater(bot=bot)
-    else:
-        updater = Updater(token=ENV.str("TG_BOT_TOKEN"))
-    select_handler_by_env(LOGGER, bot=updater.bot)
+def run_bot(bot):
+    updater = Updater(bot=bot)
     dispatcher = updater.dispatcher
-
     start_handler = CommandHandler("start", start)
     dialog_handler = MessageHandler(Filters.text & (~Filters.command), dialog_answer)
     dispatcher.add_handler(start_handler)
     dispatcher.add_handler(dialog_handler)
     dispatcher.add_error_handler(error_handler)
-
     LOGGER.info("Bot listening for events.")
     updater.start_polling()
+
+
+def main(bot=None):
+    ENV.read_env()
+    bot = Bot(token=ENV.str("TG_BOT_TOKEN"))
+    log_handler = get_handler_by_env(notify_bot=bot)
+    LOGGER.addHandler(log_handler)
+
+    run_bot(bot)
 
 
 if __name__ == "__main__":
