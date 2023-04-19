@@ -3,14 +3,13 @@ import logging
 from environs import Env
 from telegram import Bot
 
-env = Env()
-
+ENV = Env()
 FORMATTER = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 
 
 def get_logger(name):
     logger = logging.getLogger(name)
-    logger.setLevel(getattr(logging, env.str("LOG_LEVEL", "WARNING")))
+    logger.setLevel(getattr(logging, ENV.str("LOG_LEVEL", "WARNING")))
     return logger
 
 
@@ -27,14 +26,14 @@ class TelegramLogsHandler(logging.Handler):
 
 def select_handler_by_env(logger: logging.Logger, bot=None):
     """options - FILE/TG/CONSOLE"""
-    log_env = env.str("LOGGER")
+    log_env = ENV.str("LOGGER")
     if log_env == "FILE":
         handler = logging.FileHandler(env.str("LOG_PATH"))
 
     elif log_env == "TG":
         if bot is None:
-            bot = Bot(token=env.str("TG_BOT_TOKEN"))
-        handler = TelegramLogsHandler(bot, env.str("TG_ADMIN_CHAT_ID"))
+            bot = Bot(token=ENV.str("TG_BOT_TOKEN"))
+        handler = TelegramLogsHandler(bot, ENV.str("TG_ADMIN_CHAT_ID"))
     else:
         handler = logging.StreamHandler()
     handler.setFormatter(FORMATTER)
