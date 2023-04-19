@@ -1,18 +1,28 @@
-import json
 import argparse
-from dialog import create_intent
+import json
+from google.api_core.exceptions import InvalidArgument
+from dialogflow import create_intent
 from environs import Env
+import logging
 
 ENV = Env()
-ENV.read_env()
+
+logging.basicConfig(
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
+)
+
 
 def get_args():
-    parser = argparse.ArgumentParser(description="DialogFlow ")    
+    parser = argparse.ArgumentParser(description="DialogFlow ")
     parser.add_argument(
-        "-p", dest="path", default="./questions.json", 
-        type=str, description="Path to json file with questions"
+        "-p",
+        dest="path",
+        default="./questions.json",
+        type=str,
+        help="Path to json file with questions",
     )
-    args = parser.parse_args()
+    return parser.parse_args()
+
 
 def load_questions(filepath):
     with open("./questions.json", "r", encoding="utf-8") as file:
@@ -22,14 +32,21 @@ def load_questions(filepath):
 
 def teach(questions):
     for intent in questions.keys():
-        phrases = questions[intent]["questions"]
-        answer = questions[intent]["answer"]
-        create_intent(ENV.str("PROJECT_ID"), intent, phrases, [answer])
+        try:
+            phrases = questions[intent]["questions"]
+            answer = questions[intent]["answer"]
+            create_intent(ENV.str("GOOGLE_CLOUD_PROJECT"), intent, phrases, [answer])
+        except InvalidArgument as e:
+            logging.info(f"Раздел {intent} уже существует")
 
 
 def main():
-    args = get_args()
-    questions = load_questions(args.path)
+    ENV.read_env()
+    questions_path = ENV.str("QUESTIONS_JSON", None)
+    if not questions_path:
+        questions_path = get_args().path
+
+    questions = load_questions(questions_path)
     teach(questions)
 
 
