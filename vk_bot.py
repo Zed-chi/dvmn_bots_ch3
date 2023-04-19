@@ -3,18 +3,18 @@ import random
 
 import vk_api
 from environs import Env
+from telegram import Bot
 from vk_api.bot_longpoll import VkBotEventType, VkBotLongPoll
 
 from dialogflow import Answer, detect_intent_texts
-from log_config import get_handler_by_env, FORMATTER
-from telegram import Bot
+from log_config import FORMATTER, get_handler_by_env
 
 ENV = Env()
 LOGGER = logging.getLogger("VK")
 LOGGER.setFormatter(FORMATTER)
 
 
-def answer_from_dialogflow(event, vk_api):
+def send_message_with_dialogflow_asnwer(event, vk_api):
     LOGGER.debug(f"dialogflow event {event}")
     user_id = event.message["from_id"]
     message = event.message["text"]
@@ -36,15 +36,9 @@ def listen_for_events(longpoll, api):
     for event in longpoll.listen():
         if event.type == VkBotEventType.MESSAGE_NEW:
             LOGGER.info("Пришло сообщение.")
-            answer_from_dialogflow(event, api)
-        elif event.type == VkBotEventType.MESSAGE_REPLY:
-            LOGGER.info(
-                "Новое сообщение от меня для {}, Текст:{}".format(
-                    event.obj.peer_id, event.obj.text
-                )
-            )
+            send_message_with_dialogflow_asnwer(event, api)
         elif event.type == VkBotEventType.MESSAGE_TYPING_STATE:
-            LOGGER.info(f"Печатает {event.obj.from_id} для {event.obj.to_id}")
+            LOGGER.debug(f"Печатает {event.obj.from_id} для {event.obj.to_id}")
         else:
             LOGGER.debug(event.type)
 

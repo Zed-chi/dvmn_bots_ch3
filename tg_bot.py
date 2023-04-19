@@ -11,7 +11,7 @@ from telegram.ext import (
 )
 
 from dialogflow import Answer, detect_intent_texts
-from log_config import get_handler_by_env, FORMATTER
+from log_config import FORMATTER, get_handler_by_env
 
 ENV = Env()
 LOGGER = logging.getLogger("TG")
@@ -28,7 +28,7 @@ def start(update: Update, context: CallbackContext):
     context.bot.send_message(chat_id=user_id, text="I'm a bot, please talk to me!")
 
 
-def dialog_answer(update: Update, context: CallbackContext):
+def send_message_with_dialogflow_asnwer(update: Update, context: CallbackContext):
     user_id = update.effective_chat.id
     LOGGER.debug(f"user#{user_id} sended message")
     answer: Answer = detect_intent_texts(
@@ -45,7 +45,9 @@ def run_bot(bot):
     updater = Updater(bot=bot)
     dispatcher = updater.dispatcher
     start_handler = CommandHandler("start", start)
-    dialog_handler = MessageHandler(Filters.text & (~Filters.command), dialog_answer)
+    dialog_handler = MessageHandler(
+        Filters.text & (~Filters.command), send_message_with_dialogflow_asnwer
+    )
     dispatcher.add_handler(start_handler)
     dispatcher.add_handler(dialog_handler)
     dispatcher.add_error_handler(error_handler)
