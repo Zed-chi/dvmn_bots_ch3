@@ -1,9 +1,11 @@
 import argparse
 import json
-from google.api_core.exceptions import InvalidArgument
-from dialogflow import create_intent
-from environs import Env
 import logging
+
+from environs import Env
+from google.api_core.exceptions import InvalidArgument
+
+from dialogflow import create_intent
 
 ENV = Env()
 
@@ -38,7 +40,7 @@ def teach(questions):
             create_intent(
                 ENV.str("GOOGLE_CLOUD_PROJECT"), intent_name, phrases, [answer]
             )
-        except InvalidArgument as e:
+        except InvalidArgument:
             logging.info(f"Раздел {intent_name} уже существует")
 
 
