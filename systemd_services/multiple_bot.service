@@ -1,0 +1,11 @@
+[Unit]
+Description=TG and VK Bots
+After=network.target
+
+[Service]
+WorkingDirectory=/opt/bots
+ExecStart=python3 multiple_bots_run.py
+Restart=always
+
+[Install]
+WantedBy=multi-user.target
