@@ -12,7 +12,6 @@ from dialogflow import detect_intent_texts
 from log_config import get_logger, select_handler_by_env
 
 env = Env()
-env.read_env()
 LOGGER = get_logger("TG")
 
 
@@ -50,7 +49,8 @@ def dialog_answer(update: Update, context: CallbackContext):
         LOGGER.debug(f"dont understand message from user#{user_id}")
 
 
-def main(bot=None):
+def main(bot=None):    
+    env.read_env()
     if bot:
         LOGGER.debug("external bot inject")
         updater = Updater(bot=bot)

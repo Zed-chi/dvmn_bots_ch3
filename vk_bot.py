@@ -7,9 +7,7 @@ from vk_api.bot_longpoll import VkBotEventType, VkBotLongPoll
 from dialogflow import detect_intent_texts
 from log_config import get_logger, select_handler_by_env
 
-env = Env()
-env.read_env("./.env")
-
+ENV = Env()
 LOGGER = get_logger("VK")
 
 
@@ -29,7 +27,7 @@ def answer_from_dialogflow(event, vk_api):
     user_id = event.message["from_id"]
     message = event.message["text"]
     answer = detect_intent_texts(
-        env.str("GOOGLE_CLOUD_PROJECT"), user_id, message, "ru"
+        ENV.str("GOOGLE_CLOUD_PROJECT"), user_id, message, "ru"
     )
     if answer:
         LOGGER.debug(f"sending '{answer}' to user#{user_id}")
@@ -64,10 +62,11 @@ def listening_cycle(longpoll, api):
 
 
 def main():
+    ENV.read_env("./.env")
     select_handler_by_env(LOGGER)
-    vk_session = vk_api.VkApi(token=env.str("VK_GROUP_TOKEN"))
+    vk_session = vk_api.VkApi(token=ENV.str("VK_GROUP_TOKEN"))
     api = vk_session.get_api()
-    longpoll = VkBotLongPoll(vk_session, env.str("VK_GROUP_ID"))
+    longpoll = VkBotLongPoll(vk_session, ENV.str("VK_GROUP_ID"))
 
     while True:
         LOGGER.info("Bot listening for events.")
