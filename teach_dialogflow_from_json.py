@@ -31,13 +31,15 @@ def load_questions(filepath):
 
 
 def teach(questions):
-    for intent in questions.keys():
+    for intent_name, intent_data in questions.items():
         try:
-            phrases = questions[intent]["questions"]
-            answer = questions[intent]["answer"]
-            create_intent(ENV.str("GOOGLE_CLOUD_PROJECT"), intent, phrases, [answer])
+            phrases = intent_data["questions"]
+            answer = intent_data["answer"]
+            create_intent(
+                ENV.str("GOOGLE_CLOUD_PROJECT"), intent_name, phrases, [answer]
+            )
         except InvalidArgument as e:
-            logging.info(f"Раздел {intent} уже существует")
+            logging.info(f"Раздел {intent_name} уже существует")
 
 
 def main():
