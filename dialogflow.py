@@ -1,7 +1,9 @@
-from google.cloud import dialogflow
 from dataclasses import dataclass
 
+from google.cloud import dialogflow
 
+
+@dataclass
 class Answer:
     is_fallback: bool
     text: str
