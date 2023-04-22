@@ -22,7 +22,9 @@ def send_message_with_dialogflow_asnwer(event, vk_api):
         ENV.str("GOOGLE_CLOUD_PROJECT"), user_id, message, "ru"
     )
     if answer.is_fallback:
-        LOGGER.debug(f"dont understand message from user#{user_id}")
+        LOGGER.debug(
+            f"dont understand message from user#{user_id}"
+        )
         return
     LOGGER.debug(f"sending '{answer}' to user#{user_id}")
     vk_api.messages.send(
@@ -38,7 +40,9 @@ def listen_for_events(longpoll, api):
             LOGGER.info("Пришло сообщение.")
             send_message_with_dialogflow_asnwer(event, api)
         elif event.type == VkBotEventType.MESSAGE_TYPING_STATE:
-            LOGGER.debug(f"Печатает {event.obj.from_id} для {event.obj.to_id}")
+            LOGGER.debug(
+                f"Печатает {event.obj.from_id} для {event.obj.to_id}"
+            )
         else:
             LOGGER.debug(event.type)
 
@@ -58,12 +62,22 @@ def run_bot(group_token, group_id):
 
 def main():
     ENV.read_env("./.env")
-    notify_tg_bot = Bot(token=ENV.str("TG_BOT_TOKEN"))
-    log_handler = get_handler_by_env(notify_bot=notify_tg_bot)
-    LOGGER.addHandler(log_handler)
 
+    tg_bot_token = ENV.str("TG_BOT_TOKEN")
+    admin_tg_chat_id = ENV.str("TG_ADMIN_CHAT_ID")
     vk_group_token = ENV.str("VK_GROUP_TOKEN")
     vk_group_id = ENV.str("VK_GROUP_ID")
+    logger_type = ENV.str("LOGGER_TYPE")
+    log_filepath = ENV.str("LOG_PATH")
+
+    notify_tg_bot = Bot(token=tg_bot_token)
+    log_handler = get_handler_by_env(
+        logger_type,
+        log_filepath,
+        notify_tg_bot,
+        admin_tg_chat_id,
+    )
+    LOGGER.addHandler(log_handler)
 
     run_bot(vk_group_token, vk_group_id)
 
