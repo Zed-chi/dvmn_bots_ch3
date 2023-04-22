@@ -3,11 +3,13 @@ import logging
 from environs import Env
 
 ENV = Env()
-FORMATTER = logging.Formatter("%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+FORMATTER = logging.Formatter(
+    "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+)
 
 
 class TelegramLogsHandler(logging.Handler):
-    """
+    """TG Logger
     Due to one instance bot error
     we need to create common bot and inject
     it to tg runner and this handler
@@ -20,18 +22,24 @@ class TelegramLogsHandler(logging.Handler):
 
     def emit(self, record):
         log_entry = self.format(record)
-        self.tg_bot.send_message(chat_id=self.chat_id, text=log_entry)
+        self.tg_bot.send_message(
+            chat_id=self.chat_id, text=log_entry
+        )
 
 
-def get_handler_by_env(notify_bot=None):
-    """options - FILE/TG/CONSOLE"""
-    log_env = ENV.str("LOGGER")
-    if log_env == "FILE":
-        handler = logging.FileHandler(ENV.str("LOG_PATH"))
-    elif log_env == "TG":
-        if not notify_bot:
-            raise ValueError("In TG Logger you need to provide a Bot instance")
-        handler = TelegramLogsHandler(notify_bot, ENV.str("TG_ADMIN_CHAT_ID"))
+def get_handler_by_env(
+    env_value, log_filepath, notify_bot, admin_chat_id
+):
+    """Handler logger getter.
+    Options:
+    - FILE
+    - TG
+    - CONSOLE
+    """
+    if env_value == "FILE":
+        handler = logging.FileHandler(log_filepath)
+    elif env_value == "TG":
+        handler = TelegramLogsHandler(notify_bot, admin_chat_id)
     else:
         handler = logging.StreamHandler()
     return handler
