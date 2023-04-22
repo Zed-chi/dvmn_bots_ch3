@@ -39,7 +39,7 @@ GOOGLE_CLOUD_PROJECT=<ID Проекта dialogflow>
 PROJECT_API_KEY=<токен полученный с помощью google cli>
 LOG_LEVEL=<Уровень логирования - DEBUG/INFO/WARNING>
 LOG_PATH=<Путь к лог файлу>
-LOGGER=<Вариант вывода лога FILE/TG> либо вывод в консоль при отсутствии
+LOGGER_TYPE=<Вариант вывода лога FILE/TG> либо вывод в консоль при отсутствии
 ```
 
 ### Обучение DialogFlow/Наполнение Intent-ов:
