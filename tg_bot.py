@@ -15,7 +15,6 @@ from log_config import FORMATTER, get_handler_by_env
 
 ENV = Env()
 LOGGER = logging.getLogger("TG")
-LOGGER.setFormatter(FORMATTER)
 
 
 def error_handler(update, context):

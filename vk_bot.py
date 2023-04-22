@@ -11,7 +11,6 @@ from log_config import FORMATTER, get_handler_by_env
 
 ENV = Env()
 LOGGER = logging.getLogger("VK")
-LOGGER.setFormatter(FORMATTER)
 
 
 def send_message_with_dialogflow_asnwer(
@@ -52,7 +51,7 @@ def listen_for_events(longpoll, api, google_project_name):
 
 
 def run_bot(group_token, group_id, google_project_name):
-    vk_session = vk_api.VkApi(group_token)
+    vk_session = vk_api.VkApi(token=group_token)
     api = vk_session.get_api()
     longpoll = VkBotLongPoll(vk_session, group_id)
 

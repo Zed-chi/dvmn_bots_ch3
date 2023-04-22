@@ -42,4 +42,5 @@ def get_handler_by_env(
         handler = TelegramLogsHandler(notify_bot, admin_chat_id)
     else:
         handler = logging.StreamHandler()
+        handler.setFormatter(FORMATTER)
     return handler
