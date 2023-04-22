@@ -43,10 +43,10 @@ def listen_for_events(longpoll, api):
             LOGGER.debug(event.type)
 
 
-def run_bot():
-    vk_session = vk_api.VkApi(token=ENV.str("VK_GROUP_TOKEN"))
+def run_bot(group_token, group_id):
+    vk_session = vk_api.VkApi(group_token)
     api = vk_session.get_api()
-    longpoll = VkBotLongPoll(vk_session, ENV.str("VK_GROUP_ID"))
+    longpoll = VkBotLongPoll(vk_session, group_id)
 
     while True:
         LOGGER.info("Bot listening for events.")
@@ -62,7 +62,10 @@ def main():
     log_handler = get_handler_by_env(notify_bot=notify_tg_bot)
     LOGGER.addHandler(log_handler)
 
-    run_bot()
+    vk_group_token = ENV.str("VK_GROUP_TOKEN")
+    vk_group_id = ENV.str("VK_GROUP_ID")
+
+    run_bot(vk_group_token, vk_group_id)
 
 
 if __name__ == "__main__":
