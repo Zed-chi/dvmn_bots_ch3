@@ -9,10 +9,6 @@ from dialogflow import create_intent
 
 ENV = Env()
 
-logging.basicConfig(
-    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s", level=logging.INFO
-)
-
 
 def get_args():
     parser = argparse.ArgumentParser(description="DialogFlow ")
@@ -27,7 +23,7 @@ def get_args():
 
 
 def load_questions(filepath):
-    with open("./questions.json", "r", encoding="utf-8") as file:
+    with open(filepath, "r", encoding="utf-8") as file:
         questions: dict = json.load(file)
         return questions
 
@@ -44,6 +40,10 @@ def teach(questions, project_id):
 
 def main():
     ENV.read_env()
+    logging.basicConfig(
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+        level=logging.INFO,
+    )
     questions_path = ENV.str("QUESTIONS_JSON", None)
     project_id = ENV.str("GOOGLE_CLOUD_PROJECT")
 
