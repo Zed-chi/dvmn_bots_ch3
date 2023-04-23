@@ -7,8 +7,6 @@ from google.api_core.exceptions import InvalidArgument
 
 from dialogflow import create_intent
 
-ENV = Env()
-
 
 def get_args():
     parser = argparse.ArgumentParser(description="DialogFlow ")
@@ -33,19 +31,22 @@ def teach(questions, project_id):
         try:
             phrases = intent_data["questions"]
             answer = intent_data["answer"]
-            create_intent(project_id, intent_name, phrases, [answer])
+            create_intent(
+                project_id, intent_name, phrases, [answer]
+            )
         except InvalidArgument:
             logging.info(f"Раздел {intent_name} уже существует")
 
 
 def main():
-    ENV.read_env()
+    env = Env()
+    env.read_env()
     logging.basicConfig(
         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
         level=logging.INFO,
     )
-    questions_path = ENV.str("QUESTIONS_JSON", None)
-    project_id = ENV.str("GOOGLE_CLOUD_PROJECT")
+    questions_path = env.str("QUESTIONS_JSON", None)
+    project_id = env.str("GOOGLE_CLOUD_PROJECT")
 
     if not questions_path:
         questions_path = get_args().path

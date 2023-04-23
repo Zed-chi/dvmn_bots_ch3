@@ -9,8 +9,6 @@ from tg_bot import run_bot as tg
 from vk_bot import LOGGER as vk_logger
 from vk_bot import run_bot as vk
 
-ENV = Env()
-
 
 def main():
     """Main runner for bots.
@@ -18,13 +16,14 @@ def main():
     we need to create bot and inject
     it to tg runner and logger(if you selected tg_logger)
     """
-    ENV.read_env()
-    tg_bot_token = ENV.str("TG_BOT_TOKEN")
-    admin_tg_chat_id = ENV.str("TG_ADMIN_CHAT_ID")
-    vk_group_token = ENV.str("VK_GROUP_TOKEN")
-    vk_group_id = ENV.str("VK_GROUP_ID")
-    logger_type = ENV.str("LOGGER_TYPE")
-    log_filepath = ENV.str("LOG_PATH")
+    env = Env()
+    env.read_env()
+    tg_bot_token = env.str("TG_BOT_TOKEN")
+    admin_tg_chat_id = env.str("TG_ADMIN_CHAT_ID")
+    vk_group_token = env.str("VK_GROUP_TOKEN")
+    vk_group_id = env.str("VK_GROUP_ID")
+    logger_type = env.str("LOGGER_TYPE")
+    log_filepath = env.str("LOG_PATH")
 
     bot = Bot(token=tg_bot_token)
     log_handler = get_handler_by_env(

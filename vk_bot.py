@@ -9,7 +9,7 @@ from vk_api.bot_longpoll import VkBotEventType, VkBotLongPoll
 from dialogflow import Answer, detect_intent_texts
 from log_config import FORMATTER, get_handler_by_env
 
-ENV = Env()
+
 LOGGER = logging.getLogger("VK")
 
 
@@ -64,15 +64,16 @@ def run_bot(group_token, group_id, google_project_name):
 
 
 def main():
-    ENV.read_env("./.env")
+    env = Env()
+    env.read_env("./.env")
 
-    tg_bot_token = ENV.str("TG_BOT_TOKEN")
-    admin_tg_chat_id = ENV.str("TG_ADMIN_CHAT_ID")
-    vk_group_token = ENV.str("VK_GROUP_TOKEN")
-    vk_group_id = ENV.str("VK_GROUP_ID")
-    logger_type = ENV.str("LOGGER_TYPE")
-    log_filepath = ENV.str("LOG_PATH")
-    google_project_name = ENV.str("GOOGLE_CLOUD_PROJECT")
+    tg_bot_token = env.str("TG_BOT_TOKEN")
+    admin_tg_chat_id = env.str("TG_ADMIN_CHAT_ID")
+    vk_group_token = env.str("VK_GROUP_TOKEN")
+    vk_group_id = env.str("VK_GROUP_ID")
+    logger_type = env.str("LOGGER_TYPE")
+    log_filepath = env.str("LOG_PATH")
+    google_project_name = env.str("GOOGLE_CLOUD_PROJECT")
 
     notify_tg_bot = Bot(token=tg_bot_token)
     log_handler = get_handler_by_env(

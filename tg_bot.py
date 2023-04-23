@@ -13,7 +13,7 @@ from telegram.ext import (
 from dialogflow import Answer, detect_intent_texts
 from log_config import FORMATTER, get_handler_by_env
 
-ENV = Env()
+
 LOGGER = logging.getLogger("TG")
 
 
@@ -65,11 +65,12 @@ def run_bot(bot):
 
 
 def main(bot=None):
-    ENV.read_env()
-    tg_bot_token = ENV.str("TG_BOT_TOKEN")
-    admin_tg_chat_id = ENV.str("TG_ADMIN_CHAT_ID")
-    logger_type = ENV.str("LOGGER_TYPE")
-    log_filepath = ENV.str("LOG_PATH")
+    env = Env()
+    env.read_env()
+    tg_bot_token = env.str("TG_BOT_TOKEN")
+    admin_tg_chat_id = env.str("TG_ADMIN_CHAT_ID")
+    logger_type = env.str("LOGGER_TYPE")
+    log_filepath = env.str("LOG_PATH")
 
     bot = Bot(token=tg_bot_token)
     log_handler = get_handler_by_env(
