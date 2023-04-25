@@ -1,18 +1,13 @@
 import logging
-from telegram.utils.request import Request
+
 from environs import Env
 from telegram import Bot, Update
-from telegram.ext import (
-    CallbackContext,
-    CommandHandler,
-    Filters,
-    MessageHandler,
-    Updater,
-)
+from telegram.ext import (CallbackContext, CommandHandler, Filters,
+                          MessageHandler, Updater)
+from telegram.utils.request import Request
 
 from dialogflow import Answer, detect_intent_texts
-from log_config import FORMATTER, get_handler_by_env
-
+from log_config import get_handler_by_env
 
 LOGGER = logging.getLogger("TG")
 
@@ -74,6 +69,7 @@ def main():
     tg_bot_token = env.str("TG_BOT_TOKEN")
     admin_tg_chat_id = env.str("TG_ADMIN_CHAT_ID")
     google_project_name = env.str("GOOGLE_CLOUD_PROJECT")
+    log_level = env.str("LOG_LEVEL")
     logger_type = env.str("LOGGER_TYPE")
     log_filepath = env.str("LOG_PATH")
 
@@ -83,7 +79,7 @@ def main():
         logger_type, log_filepath, bot, admin_tg_chat_id
     )
     LOGGER.addHandler(log_handler)
-
+    LOGGER.setLevel(level=getattr(logging, log_level))
     run_bot(bot, google_project_name)
 
 
