@@ -1,5 +1,5 @@
 import logging
-
+from telegram.utils.request import Request
 from environs import Env
 from telegram import Bot, Update
 from telegram.ext import (
@@ -33,12 +33,13 @@ def start(update: Update, context: CallbackContext):
 
 
 def send_message_with_dialogflow_asnwer(
-    update: Update, context: CallbackContext
+    update: Update,
+    context: CallbackContext,
 ):
     user_id = update.effective_chat.id
     LOGGER.debug(f"user#{user_id} sended message")
     answer: Answer = detect_intent_texts(
-        ENV.str("GOOGLE_CLOUD_PROJECT"),
+        context.bot_data["google_project_name"],
         update.effective_chat.id,
         update.message.text,
         "ru",
@@ -49,9 +50,12 @@ def send_message_with_dialogflow_asnwer(
     )
 
 
-def run_bot(bot):
+def run_bot(bot, google_project_name):
     updater = Updater(bot=bot)
     dispatcher = updater.dispatcher
+    dispatcher.bot_data[
+        "google_project_name"
+    ] = google_project_name
     start_handler = CommandHandler("start", start)
     dialog_handler = MessageHandler(
         Filters.text & (~Filters.command),
@@ -64,21 +68,23 @@ def run_bot(bot):
     updater.start_polling()
 
 
-def main(bot=None):
+def main():
     env = Env()
     env.read_env()
     tg_bot_token = env.str("TG_BOT_TOKEN")
     admin_tg_chat_id = env.str("TG_ADMIN_CHAT_ID")
+    google_project_name = env.str("GOOGLE_CLOUD_PROJECT")
     logger_type = env.str("LOGGER_TYPE")
     log_filepath = env.str("LOG_PATH")
 
-    bot = Bot(token=tg_bot_token)
+    request = Request(con_pool_size=8)
+    bot = Bot(token=tg_bot_token, request=request)
     log_handler = get_handler_by_env(
         logger_type, log_filepath, bot, admin_tg_chat_id
     )
     LOGGER.addHandler(log_handler)
 
-    run_bot(bot)
+    run_bot(bot, google_project_name)
 
 
 if __name__ == "__main__":
