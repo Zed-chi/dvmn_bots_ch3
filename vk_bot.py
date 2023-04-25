@@ -12,13 +12,19 @@ from log_config import get_handler_by_env
 LOGGER = logging.getLogger("VK")
 
 
-def send_message_with_dialogflow_asnwer(event, vk_api, google_project_name):
+def send_message_with_dialogflow_asnwer(
+    event, vk_api, google_project_name
+):
     LOGGER.debug(f"dialogflow event {event}")
     user_id = event.message["from_id"]
     message = event.message["text"]
-    answer: Answer = detect_intent_texts(google_project_name, user_id, message, "ru")
+    answer: Answer = detect_intent_texts(
+        google_project_name, user_id, message, "ru"
+    )
     if answer.is_fallback:
-        LOGGER.debug(f"dont understand message from user#{user_id}")
+        LOGGER.debug(
+            f"dont understand message from user#{user_id}"
+        )
         return
     LOGGER.debug(f"sending '{answer}' to user#{user_id}")
     vk_api.messages.send(
@@ -32,9 +38,13 @@ def listen_for_events(longpoll, api, google_project_name):
     for event in longpoll.listen():
         if event.type == VkBotEventType.MESSAGE_NEW:
             LOGGER.info("Пришло сообщение.")
-            send_message_with_dialogflow_asnwer(event, api, google_project_name)
+            send_message_with_dialogflow_asnwer(
+                event, api, google_project_name
+            )
         elif event.type == VkBotEventType.MESSAGE_TYPING_STATE:
-            LOGGER.debug(f"Печатает {event.obj.from_id} для {event.obj.to_id}")
+            LOGGER.debug(
+                f"Печатает {event.obj.from_id} для {event.obj.to_id}"
+            )
         else:
             LOGGER.debug(event.type)
 
