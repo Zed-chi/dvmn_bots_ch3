@@ -1,8 +1,5 @@
 import logging
 
-from environs import Env
-
-
 FORMATTER = logging.Formatter(
     "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
 )
